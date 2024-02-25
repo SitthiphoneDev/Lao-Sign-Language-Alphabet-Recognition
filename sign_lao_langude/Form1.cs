@@ -20,11 +20,11 @@ namespace sign_lao_langude
         {
             InitializeComponent();
             capture = new VideoCapture();
-            //faceCascade = new CascadeClassifier("haarcascade_frontalface_default.xml");
+            faceCascade = new CascadeClassifier("C:\\Users\\Sitth\\source\\computer vision\\sign_lao_langude\\Model\\haarcascade_frontalface_default.xml");
             Application.Idle += ProcessFrame;
 
             // Load the ONNX model
-            net = DnnInvoke.ReadNetFromONNX("\"C:\\Users\\Sitth\\source\\computer vision\\sign_lao_langude\\Model\\lsl_model.onnx\"");
+            net = DnnInvoke.ReadNetFromONNX("C:\\Users\\Sitth\\source\\computer vision\\sign_lao_langude\\Model\\lsl_model.onnx");
         }
 
         private void button1_Click(object sender, EventArgs e)
