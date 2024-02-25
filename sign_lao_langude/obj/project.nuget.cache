@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GqSo/EFKdHA4/qOtadjV0tOVzkaJZnh6RHqWP++M9T4vx69ySDA83xoRyssvaaBrC3maV4jZJohzPGib4Vqugw==",
+  "dgSpecHash": "ICSkDtEUgK0uf8qqIYPoBNbdBjVzoGBwPS8M/E5NBvwE7bQVgDwSGJ2aOmYsMzaPzyDliylc87Xd+J61U3k76Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Sitth\\source\\repos\\Computer vision\\Homework\\sign_lao_langude\\sign_lao_langude\\sign_lao_langude.csproj",
+  "projectFilePath": "C:\\Users\\Sitth\\source\\computer vision\\sign_lao_langude\\sign_lao_langude\\sign_lao_langude.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Sitth\\.nuget\\packages\\emgu.cv\\4.8.1.5350\\emgu.cv.4.8.1.5350.nupkg.sha512",
     "C:\\Users\\Sitth\\.nuget\\packages\\emgu.cv.bitmap\\4.8.1.5350\\emgu.cv.bitmap.4.8.1.5350.nupkg.sha512",

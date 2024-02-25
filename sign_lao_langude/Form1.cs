@@ -3,7 +3,6 @@ using Emgu.CV.Dnn;
 using Emgu.CV.Structure;
 using System;
 using System.Drawing;
-using System.Reflection.Emit;
 using System.Windows.Forms;
 
 namespace sign_lao_langude
@@ -21,11 +20,11 @@ namespace sign_lao_langude
         {
             InitializeComponent();
             capture = new VideoCapture();
-            faceCascade = new CascadeClassifier("haarcascade_frontalface_default.xml");
+            //faceCascade = new CascadeClassifier("haarcascade_frontalface_default.xml");
             Application.Idle += ProcessFrame;
 
             // Load the ONNX model
-            net = DnnInvoke.ReadNetFromONNX("C:\\Users\\Sitth\\source\\repos\\Computer vision\\Homework\\sign_lao_langude\\sign_lao_langude\\model");
+            net = DnnInvoke.ReadNetFromONNX("\"C:\\Users\\Sitth\\source\\computer vision\\sign_lao_langude\\Model\\lsl_model.onnx\"");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -44,60 +43,22 @@ namespace sign_lao_langude
             {
                 if (frame != null)
                 {
-                    // Resize the frame to match the input size expected by the model
-                    Mat resizedFrame = new Mat();
-                    CvInvoke.Resize(frame, resizedFrame, new Size(224, 224));
+                    CvInvoke.Flip(frame, frame, Emgu.CV.CvEnum.FlipType.Horizontal);
 
-                    // Convert the resized frame to a blob
-                    Mat blob = DnnInvoke.BlobFromImage(resizedFrame, 1, new Size(224, 224), new MCvScalar(104, 117, 123));
-
-                    // Set the blob as input to the model
-                    net.SetInput(blob);
-
-                    // Perform inference
-                    Mat prob = net.Forward();
-
-                    // Convert the result to a readable format
-                    Mat probMat = prob.Reshape(1, 1); // Reshape the blob to 1x1 matrix
-                    float[] resultData = new float[probMat.Cols * probMat.Rows * probMat.NumberOfChannels];
-                    probMat.CopyTo(resultData); // Copy the data to an array
-
-                    // Do something with the result data
-                    // For example, display it in a label
-                    label1.Text = string.Join(", ", resultData);
-
-                    // Convert the frame to bitmap
-                    Bitmap bitmap = frame.ToBitmap();
-
-                    // Display the bitmap in the PictureBox
-                    pictureBox1.Image = bitmap;
-
-                    // Perform any other processing here...
-                }
-            }
-        }
-
-        private void ProcessFrame(object sender, EventArgs e)
-        {
-            using (var frame = capture.QueryFrame())
-            {
-                if (frame != null)
-                {
-                    frame.Flip(Emgu.CV.CvEnum.FlipType.Horizontal);
-
-                    var grayFrame = frame.Convert<Gray, byte>();
+                    var grayFrame = frame.ToImage<Gray, byte>();
                     var faces = faceCascade.DetectMultiScale(grayFrame, 1.1, 3, new System.Drawing.Size(20, 20));
 
                     foreach (var face in faces)
                     {
-                        var roi = frame.GetSubRect(face);
-                        var roiBitmap = roi.Bitmap;
-                        var avgVariance = CalculateAverageVariance(roiBitmap);
+                        var roiRect = face; // Use face directly, which is of type Rectangle
+                        var roi = new Mat(frame, roiRect); // Create ROI using constructor
+                        var avgVariance = CalculateAverageVariance(roi);
 
                         if (avgVariance > 1000)
                         {
-                            var resizedRoi = roiBitmap.Resize(100, 100, Emgu.CV.CvEnum.Inter.Linear);
-                            var prediction = Predict(resizedRoi);
+                            var resizedRoi = new Mat();
+                            CvInvoke.Resize(roi, resizedRoi, new System.Drawing.Size(100, 100), 0, 0, Emgu.CV.CvEnum.Inter.Linear);
+                            var prediction = Predict(resizedRoi); // Pass Mat directly
                             var confidence = prediction.Max();
                             var predictedLabelIndex = Array.IndexOf(prediction, confidence);
                             var predictedLabel = labels[predictedLabelIndex];
@@ -106,10 +67,57 @@ namespace sign_lao_langude
                         }
                     }
 
-                    imageBoxFrameGrabber.Image = frame;
+                    pictureBox1.Image = frame.ToBitmap();
                 }
             }
         }
+
+        private double[] Predict(Mat roi)
+        {
+            // Placeholder for your prediction code using Emgu.CV
+            return new double[labels.Length];
+        }
+
+
+        private double CalculateAverageVariance(Mat roi)
+        {
+            var grayRoi = roi.ToImage<Gray, byte>(); // Convert Mat to Image<Gray, byte>
+            var channels = grayRoi.Split(); // Split the grayscale image into channels
+
+            var varianceSum = 0.0;
+
+            for (int i = 0; i < channels.Length; i++)
+            {
+                var channel = channels[i];
+                var mean = channel.GetAverage().Intensity; // Calculate the mean intensity of the channel
+
+                double channelVariance = 0;
+
+                // Calculate the variance of pixel intensities in the channel
+                for (int x = 0; x < channel.Width; x++)
+                {
+                    for (int y = 0; y < channel.Height; y++)
+                    {
+                        var intensity = channel[y, x].Intensity;
+                        channelVariance += Math.Pow(intensity - mean, 2);
+                    }
+                }
+
+                channelVariance /= (channel.Width * channel.Height); // Normalize by the number of pixels
+                varianceSum += channelVariance; // Accumulate the variance across channels
+            }
+
+            return varianceSum / channels.Length; // Return the average variance across channels
+        }
+
+
+
+        private double[] Predict(System.Drawing.Bitmap roi)
+        {
+            // Placeholder for your ONNX model prediction code
+            return new double[labels.Length];
+        }
+
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (capture != null)

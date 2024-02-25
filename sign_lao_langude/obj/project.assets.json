@@ -1845,11 +1845,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Sitth\\source\\repos\\Computer vision\\Homework\\sign_lao_langude\\sign_lao_langude\\sign_lao_langude.csproj",
+      "projectUniqueName": "C:\\Users\\Sitth\\source\\computer vision\\sign_lao_langude\\sign_lao_langude\\sign_lao_langude.csproj",
       "projectName": "sign_lao_langude",
-      "projectPath": "C:\\Users\\Sitth\\source\\repos\\Computer vision\\Homework\\sign_lao_langude\\sign_lao_langude\\sign_lao_langude.csproj",
+      "projectPath": "C:\\Users\\Sitth\\source\\computer vision\\sign_lao_langude\\sign_lao_langude\\sign_lao_langude.csproj",
       "packagesPath": "C:\\Users\\Sitth\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Sitth\\source\\repos\\Computer vision\\Homework\\sign_lao_langude\\sign_lao_langude\\obj\\",
+      "outputPath": "C:\\Users\\Sitth\\source\\computer vision\\sign_lao_langude\\sign_lao_langude\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
